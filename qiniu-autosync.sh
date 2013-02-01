@@ -16,7 +16,7 @@
 #                       -c /PATH/TO/qboxrsctl \       # qboxrsctl 可执行命令所在路径
 #                       -d /PATH/TO/WATCH_DIR \       # 要监控的目录，绝对路径
 #                       -e ALLOW_DELETE_TrueOrFalse \ # 是否允许自动删除，缺省为 false
-#                       -f FILE_BLOCK_SIZE \          # 文件切片分块大小，超过这个大小启用并行断点续上传，缺省为 4 MB
+#                       -f FILE_BLOCK_SIZE \          # 文件切片分块大小，超过这个大小启用并行断点续上传，缺省为 4194304 (4MB)
 #                       -g INOTIFY_IGNORE_PATTERN     # 忽略列表(正则)，缺省为 "^(.+(\~|\.sw.?)|4913)$" (即 vim 临时文件)
 #
 
