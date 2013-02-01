@@ -14,6 +14,7 @@ Sync files to Qiniu Cloud Storage automaticly with inotify-tools
 
 ```
 curl -fsSkL https://raw.github.com/why404/qiniu-autosync/master/qiniu-autosync.sh -o qiniu-autosync.sh
+chmod +x ./qiniu-autosync.sh
 ```
 
 使用
