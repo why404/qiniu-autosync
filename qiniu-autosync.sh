@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Writen by 404 - <https://github.com/why404>
+
 # 此脚本可监控 Linux/Unix 上指定的文件夹，并将此文件夹内的新增或改动文件自动同步到七牛云存储，可设定同步删除。
 
 # 1. 需先安装 inotify-tools - <https://github.com/rvoicilas/inotify-tools/wiki>
