@@ -35,7 +35,7 @@ INOTIFY_BIN=/usr/bin/inotifywait
 
 INOTIFY_EVENTS="moved_to,create,delete,close_write,close"
 INOTIFY_TIME_FMT="%d/%m/%y %H:%M"
-INOTIFY_FORMAT="%T %w%f %e"
+INOTIFY_FORMAT="%T %e %w%f"
 
 while getopts a:b:c:d:e:f:g: option
 do
@@ -61,20 +61,20 @@ getFileKey() {
     echo $key
 }
 
-$INOTIFY_BIN --exclude "$INOTIFY_IGNORE_PATTERN" -mre "$INOTIFY_EVENTS" --timefmt "$INOTIFY_TIME_FMT" --format "$INOTIFY_FORMAT" $WATCH_DIR | while read date time file event
+$INOTIFY_BIN --exclude "$INOTIFY_IGNORE_PATTERN" -mre "$INOTIFY_EVENTS" --timefmt "$INOTIFY_TIME_FMT" --format "$INOTIFY_FORMAT" $WATCH_DIR | while read date time event file
 do
 
     case "$event" in
 
         CLOSE_WRITE,CLOSE | MOVED_TO)
 
-            key=`getFileKey $WATCH_DIR $file`
+            key=`getFileKey $WATCH_DIR "$file"`
             echo "start uploading ${file}"
 
-            if [ `stat -c %s $file` -gt $QINIU_BLOCK_SIZE ]; then
-                $QINIU_CMD -a $QINIU_APPKEY_FILE put -c $QINIU_BUCKET $key $file
+            if [ `stat -c %s "$file"` -gt $QINIU_BLOCK_SIZE ]; then
+                $QINIU_CMD -a $QINIU_APPKEY_FILE put -c $QINIU_BUCKET "$key" "$file"
             else
-                $QINIU_CMD -a $QINIU_APPKEY_FILE put $QINIU_BUCKET $key $file
+                $QINIU_CMD -a $QINIU_APPKEY_FILE put $QINIU_BUCKET "$key" "$file"
             fi
 
             echo "successfully uploaded $QINIU_BUCKET:$key"
@@ -83,9 +83,9 @@ do
         DELETE)
             echo "deleting file: ${file}"
             if $ALLOW_DELETE; then
-                key=`getFileKey $WATCH_DIR $file`
+                key=`getFileKey $WATCH_DIR "$file"`
                 echo "deleting key: ${key}"
-                $QINIU_CMD -a $QINIU_APPKEY_FILE del $QINIU_BUCKET $key
+                $QINIU_CMD -a $QINIU_APPKEY_FILE del $QINIU_BUCKET "$key"
                 echo "successfully deleted $QINIU_BUCKET:$key"
             else
                 echo "${date} ${time} ${file} ${event}"
